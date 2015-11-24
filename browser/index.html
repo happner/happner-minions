@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <script src=/api/client></script>
+    </head>
+    <body>
+        <script>
+
+            // window.LOG_LEVEL = 'debug';
+
+            document.body.innerHTML = '<h4>connecting...</h4>';
+
+            var credentials = {
+                username: localStorage.username,
+                password: localStorage.password,
+            };
+
+            var client = window.client = new MeshClient();
+
+            var start = function() {
+                document.body.innerHTML = '';
+
+                window.runScript = function(name, opts) {
+
+                    client.exchange['happner-minions'].runScript(name, opts)
+                    .then(function(result) {
+                        console.log('RESULT\n', JSON.stringify(result, null, 2))
+                    })
+                    .catch(function(e) {
+                        console.error(e);
+                    });
+
+                }
+
+                // client.event.www.on('update', function(data) {
+                //     document.body.innerHTML = 
+                //         '<pre>' + 
+                //         JSON.stringify(data, null, 2) +
+                //         '</pre>';
+                // });
+            }
+
+            var error = function(e) {
+                document.body.innerHTML = 
+                    '<h4>' + e.message + '</h4>' +
+                    'In javascript console...' +
+                    '<p style="font-family: courier; font-size: small">' +
+                    'localStorage.username = \'yours\';<br/>' +
+                    'localStorage.password = \'yours\';</p>' +
+                    '...then refresh page.';   
+            }
+
+            client.login(credentials).then(start).catch(error);
+
+        </script>
+    </body>
+</html>
