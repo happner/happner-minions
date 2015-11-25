@@ -49,7 +49,7 @@ var user = opts.config.user || {};
 // var configGen = require((opts.config.home || '..') + '/config/minion_' + config);
 // var config = configGen.createConfig(name, endpointConfig, user);
 
-var Config = require((opts.config.home || '..') + '/config/minion_' + config);
+var Config = require((opts.config.home || '..') + '/configs/mesh_' + config);
 var Script = require((opts.config.home || '..') + '/scripts/mesh_' + script);
 
 Config.name = name;

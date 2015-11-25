@@ -1,7 +1,7 @@
 {
   "name": "happner-minions",
   "version": "0.0.0",
-  "description": "",
+  "description": "Control scripted minion nodes.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,5 +12,14 @@
     "bluebird": "^3.0.5",
     "shortid": "^2.2.4",
     "sillyname": "^0.1.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/happner/happner-minions.git"
+  },
+  "bugs": {
+    "url": "https://github.com/happner/happner-minions/issues"
+  },
+  "homepage": "https://github.com/happner/happner-minions"
 }
