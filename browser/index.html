@@ -19,16 +19,26 @@
             var start = function() {
                 document.body.innerHTML = '';
 
-                window.runScript = function(name, opts) {
-
-                    client.exchange['happner-minions'].runScript(name, opts)
+                window.runScript = function(scriptName, opts) {
+                    client.exchange['happner-minions'].runScript(scriptName, opts)
                     .then(function(result) {
-                        console.log('RESULT\n', JSON.stringify(result, null, 2))
+                        // console.log('RESULT\n', JSON.stringify(result, null, 2))
+                        console.log('runScript result:', result);
                     })
                     .catch(function(e) {
                         console.error(e);
                     });
+                }
 
+                window.viewScript = function(scriptName, opts) {
+                    client.exchange['happner-minions'].viewScript(name, opts)
+                    .then(function(result) {
+                        // console.log('RESULT\n', JSON.stringify(result, null, 2))
+                        console.log('viewScript result:', result);
+                    })
+                    .catch(function(e) {
+                        console.error(e);
+                    });
                 }
 
                 // client.event.www.on('update', function(data) {

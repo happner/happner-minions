@@ -24,6 +24,7 @@ var endpoint = opts.config.endpoint;
 var script = opts.config.script;
 var name = opts.config.name;
 var user = opts.config.user || {};
+var externalInterfaces = require('../lib//util').externalInterfaces;
 
 // var endpointConfig = 
 //   endpoint == 'insecure' ? {
@@ -89,9 +90,23 @@ report.login()
 })
 .then(function(mesh) {
   var name = mesh._mesh.config.name;
+
+  var address = mesh._mesh.datalayer.server.server.address();
+  if (address.address == '0.0.0.0') {
+    // assume first iface
+    var ifaces = externalInterfaces();
+    address.address = ifaces[0];
+  }
+
   return report.exchange['happner-minions'].minionReady({
     name: name,
-    timestamp: Date.now()
+    address: address,
+    timestamp: Date.now(),
+    task: {
+      title: Script.title,
+      stepsRemaining: Script.steps,
+      stepsDone: {}
+    }
   })
   .then(function() {
     // var run = require('../scripts/mesh_' + script);
@@ -100,7 +115,7 @@ report.login()
     // name (of minion),
     // report (meshclient connected to marshal),
     // mesh (the spawned mesh),
-    return Script.start(name, report, mesh);
+    return Script.run(name, report, mesh);
 
   })
 })
