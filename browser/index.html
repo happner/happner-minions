@@ -23,6 +23,10 @@
                     console.log('NOTIFY:', info.message, info.info);
                 });
 
+                client.event['happner-minions'].on('error', function(info) {
+                    console.error(info.type, info.error, info.object);
+                });
+
                 window.listMarshals = function() {
                     client.exchange['happner-minions'].listMarshals()
                     .then(function(result) {
@@ -50,6 +54,17 @@
                     .then(function(result) {
                         // console.log('RESULT\n', JSON.stringify(result, null, 2))
                         console.log('killMinions result:', result);
+                    })
+                    .catch(function(e) {
+                        console.error(e);
+                    }); 
+                }
+
+                window.killMinion = function(name) {
+                    client.exchange['happner-minions'].killMinion(name)
+                    .then(function(result) {
+                        // console.log('RESULT\n', JSON.stringify(result, null, 2))
+                        console.log('killMinion result:', result);
                     })
                     .catch(function(e) {
                         console.error(e);

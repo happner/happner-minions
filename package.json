@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^3.0.5",
+    "errorize": "^1.1.0",
     "shortid": "^2.2.4",
     "sillyname": "^0.1.0"
   },

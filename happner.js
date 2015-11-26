@@ -1,6 +1,5 @@
 module.exports.configs = {
 
-
   'master': {
     module: {
       name: 'happner-minions',
@@ -22,7 +21,6 @@ module.exports.configs = {
       }
     }
   },
-
 
   'marshal': {
     module: {

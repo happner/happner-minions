@@ -16,20 +16,9 @@ var Script = require((opts.config.home || '..') + '/scripts/mesh_' + script);
 var Happner = require('happner');
 
 var error = function(e) {
-
+  e = errorize(e);
   if (report && report.exchange) {
-    e = errorize(e); // grrrr  !!!!!!BAN ON THROWING STRINGS!!!!!!
-    var ee = {
-      name: e.name,
-      message: e.message,
-      stack: e.stack ? e.stack.split(os.EOL).slice(1,3).map(function(line) {
-        return line.trim();
-      }) : null
-    }
-    Object.keys(e).forEach(function(key) {
-      ee[key] = e[key]
-    });
-    return report.exchange['happner-minions'].minionError(name, ee)
+    return report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3))
     .then(function() {
       process.exit(1);
     })
@@ -52,7 +41,7 @@ report.login()
   return Happner.create(Config.createConfig(opts))
 })
 .then(function(mesh) {
-  var name = mesh._mesh.config.name;
+  var meshName = mesh._mesh.config.name;
 
   var address = mesh._mesh.datalayer.server.server.address();
   if (address.address == '0.0.0.0') {
@@ -63,6 +52,7 @@ report.login()
 
   return report.exchange['happner-minions'].minionReady({
     name: name,
+    meshName: meshName,
     address: address,
     timestamp: Date.now(),
     task: {
@@ -73,8 +63,7 @@ report.login()
   })
   .then(function() {
 
-    
-    // return Script.run(name, report, mesh);
+    // return Script.run(opts.config, report, mesh);
 
   })
 })
