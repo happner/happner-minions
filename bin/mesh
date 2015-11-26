@@ -1,54 +1,14 @@
 #!/usr/bin/env node
 
-/*
- * ### Run minion with mesh node connected uptree.
- * 
- * var report - MeshClient connected to the marshal that spawned this
- *              for reporting. (see scripts/mesh_default)
- *
-     not        * mesh       - Mesh connected uptree to either 'secure' or 'insecure'
-     any        *  
-     more       *              mesh nodes. (the test target)
- *
- * #### call from browser console
- * 
-                * > action('controller.spawnMinions', 1, {type: 'mesh'}); //, script: 'default', endpoint: 'insecure'});
- *
- */
-
 var opts = JSON.parse(process.argv[2]);
 
 var marshal = opts.marshal;
 var config = opts.config.config;
-var endpoint = opts.config.endpoint;
 var script = opts.config.script;
 var name = opts.config.name;
 var user = opts.config.user || {};
 var externalInterfaces = require('../lib//util').externalInterfaces;
-
-// var endpointConfig = 
-//   endpoint == 'insecure' ? {
-//     config: {
-//       host: process.env.INSECURE_ADDRESS,
-//       port: parseInt(process.env.INSECURE_PORT),
-//     }
-//   } : endpoint == 'secure' ? {
-//     config: {
-//       host: process.env.SECURE_ADDRESS,
-//       port: parseInt(process.env.SECURE_PORT),
-//       username: user.username || 'guest',
-//       password: user.password || ''
-//     }
-//   } : { // default
-//     config: {
-//       host: process.env.INSECURE_ADDRESS,
-//       port: parseInt(process.env.INSECURE_PORT), 
-//     }
-//   };
-//
-// endpointConfig.name = endpoint;
-// var configGen = require((opts.config.home || '..') + '/config/minion_' + config);
-// var config = configGen.createConfig(name, endpointConfig, user);
+var errorize = require('errorize');
 
 var Config = require((opts.config.home || '..') + '/configs/mesh_' + config);
 var Script = require((opts.config.home || '..') + '/scripts/mesh_' + script);
@@ -58,13 +18,9 @@ Config.name = name;
 var Happner = require('happner');
 
 var error = function(e) {
+
   if (report && report.exchange) {
-    var ee = {};
-    ee.name = e.name;
-    ee.message = e.message;
-    Object.keys(e).forEach(function(key) {
-      ee[key] = e[key];
-    });
+    var ee = errorize(e); // grrrr  !!!!!!BAN ON THROWING STRINGS!!!!!!
     return report.exchange['happner-minions'].minionError(name, ee)
     .then(function() {
       process.exit(1);
@@ -109,13 +65,9 @@ report.login()
     }
   })
   .then(function() {
-    // var run = require('../scripts/mesh_' + script);
 
-    // Call specified script with:
-    // name (of minion),
-    // report (meshclient connected to marshal),
-    // mesh (the spawned mesh),
-    return Script.run(name, report, mesh);
+    
+    // return Script.run(name, report, mesh);
 
   })
 })

@@ -19,6 +19,32 @@
             var start = function() {
                 document.body.innerHTML = '';
 
+                client.event['happner-minions'].on('notify', function(info) {
+                    console.log('notify:', info.message, info.info);
+                });
+
+                window.listMarshals = function() {
+                    client.exchange['happner-minions'].listMarshals()
+                    .then(function(result) {
+                        // console.log('RESULT\n', JSON.stringify(result, null, 2))
+                        console.log('listMarshals result:', result);
+                    })
+                    .catch(function(e) {
+                        console.error(e);
+                    });
+                }
+
+                window.killMinions = function(opts) {
+                    client.exchange['happner-minions'].killMinions(opts)
+                    .then(function(result) {
+                        // console.log('RESULT\n', JSON.stringify(result, null, 2))
+                        console.log('killMinions result:', result);
+                    })
+                    .catch(function(e) {
+                        console.error(e);
+                    }); 
+                }
+
                 window.runScript = function(scriptName, opts) {
                     client.exchange['happner-minions'].runScript(scriptName, opts)
                     .then(function(result) {

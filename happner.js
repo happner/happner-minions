@@ -37,9 +37,25 @@ module.exports.configs = {
         module: 'happner-minions',
         accessLevel: 'mesh',
         startMethod: 'start',
+
         // master: 'endpoint/componentName'
-        // (point to remote controller.Server instance)
+        // (point to remote happner-minions.Server instance)
         master: 'master/happner-minions',
+
+        // which scriptsName/minionType/limit can this marshal spawn
+        abilities: {
+          scriptName: {
+            mesh: { // minion type, see ./bin
+              limit: 1 // how many to allow
+            },
+            // client : {
+            //   limit: 1
+            // },
+            // none: : {
+            //   limit: 1
+            // }
+          }
+        }
       }
     }
   }
