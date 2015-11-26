@@ -20,7 +20,7 @@
                 document.body.innerHTML = '';
 
                 client.event['happner-minions'].on('notify', function(info) {
-                    console.log('notify:', info.message, info.info);
+                    console.log('NOTIFY:', info.message, info.info);
                 });
 
                 window.listMarshals = function() {
@@ -28,6 +28,17 @@
                     .then(function(result) {
                         // console.log('RESULT\n', JSON.stringify(result, null, 2))
                         console.log('listMarshals result:', result);
+                    })
+                    .catch(function(e) {
+                        console.error(e);
+                    });
+                }
+
+                window.listMinions = function(opts) {
+                    client.exchange['happner-minions'].listMinions(opts)
+                    .then(function(result) {
+                        // console.log('RESULT\n', JSON.stringify(result, null, 2))
+                        console.log('listMinions result:', result);
                     })
                     .catch(function(e) {
                         console.error(e);
