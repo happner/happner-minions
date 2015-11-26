@@ -44,17 +44,17 @@ module.exports.configs = {
 
         // which scriptsName/minionType/limit can this marshal spawn
         abilities: {
-          scriptName: {
-            mesh: { // minion type, see ./bin
-              limit: 1 // how many to allow
-            },
-            // client : {
-            //   limit: 1
-            // },
-            // none: : {
-            //   limit: 1
-            // }
-          }
+          // scriptName: {
+          //   mesh: { // minion type, see ./bin
+          //     limit: 1 // how many to allow
+          //   },
+          //   client : {
+          //     limit: 1
+          //   },
+          //   none: : {
+          //     limit: 1
+          //   }
+          // }
         }
       }
     }
