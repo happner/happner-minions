@@ -2,15 +2,13 @@
 
 var opts = JSON.parse(process.argv[2]);
 
-console.log('OPTS:', opts);
-
 var name = opts.config.name;
 var marshal = opts.marshal;
 var clientConfig = opts.config.clientConfig;
 var script = opts.config.script;
 var errorize = require('errorize');
 
-var Script = require((opts.config.home || '..') + '/scripts/mesh_' + script);
+var Script = require((opts.config.home || '..') + '/scripts/client_' + script);
 
 var Happner = require('happner');
 
@@ -35,8 +33,6 @@ var report = new Happner.MeshClient({
   port: marshal.datalayer.address.port,
 });
 
-console.log(clientConfig);
-
 var client = new Happner.MeshClient(clientConfig);
 
 report.login()
@@ -44,7 +40,14 @@ report.login()
   return client.login();
 })
 .then(function() {
+  return report.event['happner-minions'].onAsync('minion/start/' + name,
+    function(data, meta) {
+      return Script.run(opts.config, report, client);
+    }
+  );
+})
 
+.then(function() {
   return report.exchange['happner-minions'].minionReady({
     name: name,
     timestamp: Date.now(),
@@ -53,13 +56,7 @@ report.login()
       stepsRemaining: Script.steps,
       stepsDone: {}
     }
-  })
-  .then(function() {
-
-    // return Script.run(opts.config, report, mesh);
-
   });
-
 })
 
 .catch(error);

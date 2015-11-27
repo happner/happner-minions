@@ -49,6 +49,17 @@
                     });
                 }
 
+                window.startMinions = function(opts) {
+                    client.exchange['happner-minions'].startMinions(opts)
+                    .then(function(result) {
+                        // console.log('RESULT\n', JSON.stringify(result, null, 2))
+                        console.log('startMinions result:', result);
+                    })
+                    .catch(function(e) {
+                        console.error(e);
+                    });
+                }
+
                 window.killMinions = function(opts) {
                     client.exchange['happner-minions'].killMinions(opts)
                     .then(function(result) {

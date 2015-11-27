@@ -36,14 +36,27 @@ var report = new Happner.MeshClient({
   port: marshal.datalayer.address.port,
 });
 
+var mesh;
+
 report.login()
+
 .then(function() {
   return Happner.create(Config.createConfig(opts))
 })
-.then(function(mesh) {
-  var meshName = mesh._mesh.config.name;
 
+.then(function(result) {
+  mesh = result;
+  return report.event['happner-minions'].onAsync('minion/start/' + name,
+    function(data, meta) {
+      return Script.run(opts.config, report, mesh);
+    }
+  );
+})
+
+.then(function() {
+  var meshName = mesh._mesh.config.name;
   var address = mesh._mesh.datalayer.server.server.address();
+
   if (address.address == '0.0.0.0') {
     // assume first iface
     var ifaces = externalInterfaces();
@@ -60,11 +73,7 @@ report.login()
       stepsRemaining: Script.steps,
       stepsDone: {}
     }
-  })
-  .then(function() {
-
-    // return Script.run(opts.config, report, mesh);
-
-  })
+  });
 })
+
 .catch(error);
