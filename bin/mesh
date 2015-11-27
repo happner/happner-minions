@@ -13,6 +13,8 @@ var util = require('util');
 
 process.title = util.format('node minion mesh %s %s', script, name);
 
+delete require.cache[(opts.config.home || '..') + '/configs/mesh_' + config];
+delete require.cache[(opts.config.home || '..') + '/scripts/mesh_' + script];
 var Config = require((opts.config.home || '..') + '/configs/mesh_' + config);
 var Script = require((opts.config.home || '..') + '/scripts/mesh_' + script);
 
@@ -51,7 +53,18 @@ report.login()
   mesh = result;
   return report.event['happner-minions'].onAsync('minion/start/' + name,
     function(data, meta) {
-      return Script.run(opts.config, report, mesh);
+      var Report = {
+        stepDone: function(step, result) {
+          return report.exchange['happner-minions'].minionStepDone(name, step, result);
+        },
+        done: function(result) {
+          return report.exchange['happner-minions'].minionDone(name, result);
+        },
+        error: function(e) {
+          return report.exchange['happner-minions'].minionError(name, errorize.encode(e));
+        }
+      }
+      return Script.run(opts.config, Report, mesh);
     }
   );
 })
