@@ -49,17 +49,6 @@
                     });
                 }
 
-                window.startMinions = function(opts) {
-                    client.exchange['happner-minions'].startMinions(opts)
-                    .then(function(result) {
-                        // console.log('RESULT\n', JSON.stringify(result, null, 2))
-                        console.log('startMinions result:', result);
-                    })
-                    .catch(function(e) {
-                        console.error(e);
-                    });
-                }
-
                 window.killMinions = function(opts) {
                     client.exchange['happner-minions'].killMinions(opts)
                     .then(function(result) {
@@ -82,11 +71,22 @@
                     }); 
                 }
 
-                window.runScript = function(scriptName, opts) {
-                    client.exchange['happner-minions'].runScript(scriptName, opts)
+                window.loadScript = function(scriptName, opts) {
+                    client.exchange['happner-minions'].loadScript(scriptName, opts)
                     .then(function(result) {
                         // console.log('RESULT\n', JSON.stringify(result, null, 2))
-                        console.log('runScript result:', result);
+                        console.log('loadScript result:', result);
+                    })
+                    .catch(function(e) {
+                        console.error(e);
+                    });
+                }
+
+                window.startScript = function(opts) {
+                    client.exchange['happner-minions'].startScript(opts)
+                    .then(function(result) {
+                        // console.log('RESULT\n', JSON.stringify(result, null, 2))
+                        console.log('startScript result:', result);
                     })
                     .catch(function(e) {
                         console.error(e);

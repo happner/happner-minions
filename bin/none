@@ -1,1 +1,60 @@
 #!/usr/bin/env node
+
+var opts = JSON.parse(process.argv[2]);
+
+var name = opts.config.name;
+var marshal = opts.marshal;
+var script = opts.config.script;
+var errorize = require('errorize');
+var util = require('util');
+
+process.title = util.format('node minion none %s %s', script, name);
+
+var Script = require((opts.config.home || '..') + '/scripts/none_' + script);
+
+var Happner = require('happner');
+
+var error = function(e) {
+  e = errorize(e);
+  if (report && report.exchange) {
+    return report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3))
+    .then(function() {
+      process.exit(1);
+    })
+    .catch(function() {
+      console.error(e);
+      process.exit(1);
+    });
+  }
+  process.exit(1);
+}
+
+// Reports back to marshal.
+var report = new Happner.MeshClient({
+  host: marshal.datalayer.address.address,
+  port: marshal.datalayer.address.port,
+});
+
+report.login()
+
+.then(function() {
+  return report.event['happner-minions'].onAsync('minion/start/' + name,
+    function(data, meta) {
+      return Script.run(opts.config, report, null);
+    }
+  );
+})
+
+.then(function() {
+  return report.exchange['happner-minions'].minionReady({
+    name: name,
+    timestamp: Date.now(),
+    task: {
+      title: Script.title,
+      stepsRemaining: Script.steps,
+      stepsDone: {}
+    }
+  });
+})
+
+.catch(error);

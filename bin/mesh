@@ -9,6 +9,9 @@ var script = opts.config.script;
 var externalInterfaces = require('../lib//util').externalInterfaces;
 var errorize = require('errorize');
 var os = require('os');
+var util = require('util');
+
+process.title = util.format('node minion mesh %s %s', script, name);
 
 var Config = require((opts.config.home || '..') + '/configs/mesh_' + config);
 var Script = require((opts.config.home || '..') + '/scripts/mesh_' + script);

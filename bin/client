@@ -7,6 +7,9 @@ var marshal = opts.marshal;
 var clientConfig = opts.config.clientConfig;
 var script = opts.config.script;
 var errorize = require('errorize');
+var util = require('util');
+
+process.title = util.format('node minion client %s %s', script, name);
 
 var Script = require((opts.config.home || '..') + '/scripts/client_' + script);
 
@@ -36,9 +39,11 @@ var report = new Happner.MeshClient({
 var client = new Happner.MeshClient(clientConfig);
 
 report.login()
+
 .then(function() {
   return client.login();
 })
+
 .then(function() {
   return report.event['happner-minions'].onAsync('minion/start/' + name,
     function(data, meta) {
