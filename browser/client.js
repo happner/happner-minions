@@ -87,6 +87,16 @@ var start = function() {
       console.error(e);
     });
   }
+
+  window.resetScript = function(opts) {
+    client.exchange['happner-minions'].resetScript(opts)
+    .then(function(result) {
+      console.log('resetScript result:', result);
+    })
+    .catch(function(e) {
+      console.error(e);
+    });
+  }
 }
 
 var error = function(e) {

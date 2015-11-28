@@ -55,12 +55,36 @@ report.login()
         },
         error: function(e) {
           e.errorAt = Date.now();
-          return report.exchange['happner-minions'].minionError(name, errorize.encode(e));
+          return report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
         }
       }
-      return Script.run(opts, Report, null);
+      try {
+        return Script.run(opts, Report, null);
+      } catch (e) {
+        report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
+      }
     }
-  );
+  ).then(function() {
+    return report.event['happner-minions'].onAsync('minion/reset/' + name,
+      function(resetOpts, meta) {
+        var Report = {
+          resetDone: function(result) {
+            result.resetDoneAt = Date.now();
+            return report.exchange['happner-minions'].minionResetDone(name, result);
+          },
+          error: function(e) {
+            e.errorAt = Date.now();
+            return report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
+          }
+        }
+        try {
+          return Script.reset(resetOpts, Report, null);
+        } catch (e) {
+          report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
+        }
+      }
+    );
+  });
 })
 
 .then(function() {
