@@ -81,7 +81,23 @@ var start = function() {
   window.viewScript = function(opts) {
     client.exchange['happner-minions'].viewScript(opts)
     .then(function(result) {
-      console.log('viewScript result:', result);
+      var minionsDone = result.minions.done.length;
+      var minionsPending = result.minions.pending.length;
+      var minionsTotal = minionsDone + minionsPending;
+
+      var stepsDone = result.steps.done;
+      var stepsPending = result.steps.pending;
+      var stepsTotal = stepsDone + stepsPending;
+
+      console.log(
+        'viewScript result minions %d/%d, steps %d/%d\n',
+        minionsDone,
+        minionsTotal,
+        stepsDone,
+        stepsTotal,
+        result
+
+      );
     })
     .catch(function(e) {
       console.error(e);
