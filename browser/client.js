@@ -78,8 +78,8 @@ var start = function() {
     });
   }
 
-  window.viewScript = function(scriptName, opts) {
-    client.exchange['happner-minions'].viewScript(name, opts)
+  window.viewScript = function(opts) {
+    client.exchange['happner-minions'].viewScript(opts)
     .then(function(result) {
       console.log('viewScript result:', result);
     })
