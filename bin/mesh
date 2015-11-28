@@ -54,17 +54,23 @@ report.login()
   return report.event['happner-minions'].onAsync('minion/start/' + name,
     function(data, meta) {
       var Report = {
+        start: function() {
+          return report.exchange['happner-minions'].minionStarted(name, {startedAt: Date.now()});
+        },
         stepDone: function(step, result) {
+          result.doneAt = Date.now();
           return report.exchange['happner-minions'].minionStepDone(name, step, result);
         },
         done: function(result) {
+          result.doneAt = Date.now();
           return report.exchange['happner-minions'].minionDone(name, result);
         },
         error: function(e) {
+          e.errorAt = Date.now();
           return report.exchange['happner-minions'].minionError(name, errorize.encode(e));
         }
       }
-      return Script.run(opts.config, Report, mesh);
+      return Script.run(opts, Report, mesh);
     }
   );
 })
