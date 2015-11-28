@@ -14,6 +14,10 @@ var start = function() {
     console.log('NOTIFY:', info.message, info.info || '');
   });
 
+  client.event['happner-minions'].on('NOTIFY', function(info) {
+    console.warn('NOTIFY:', info.message, info.info || '');
+  });
+
   client.event['happner-minions'].on('error', function(info) {
     console.error(info.type, info.error, info.object);
   });

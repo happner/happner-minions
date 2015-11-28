@@ -109,6 +109,8 @@ report.login()
     address.address = ifaces[0];
   }
 
+  process.title = util.format('node minion mesh %s %s %s:%s', script, name, address.address, address.port);
+
   return report.exchange['happner-minions'].minionReady({
     name: name,
     meshName: meshName,
