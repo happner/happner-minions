@@ -11,8 +11,8 @@ var util = require('util');
 
 process.title = util.format('node minion client %s %s', script, name);
 
-delete require.cache[(opts.config.home || '..') + '/scripts/client_' + script];
-var Script = require((opts.config.home || '..') + '/scripts/client_' + script);
+delete require.cache[(opts.config.home || '..') + '/scripts/' + script + '_client'];
+var Script = require((opts.config.home || '..') + '/scripts/' + script + '_client');
 
 var Happner = require('happner');
 

@@ -10,8 +10,8 @@ var util = require('util');
 
 process.title = util.format('node minion none %s %s', script, name);
 
-delete require.cache[(opts.config.home || '..') + '/scripts/node_' + script];
-var Script = require((opts.config.home || '..') + '/scripts/none_' + script);
+delete require.cache[(opts.config.home || '..') + '/scripts/' + script + '_none'];
+var Script = require((opts.config.home || '..') + '/scripts/' + script + '_none');
 
 var Happner = require('happner');
 

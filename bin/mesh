@@ -6,17 +6,17 @@ var name = opts.config.name;
 var marshal = opts.marshal;
 var config = opts.config.config;
 var script = opts.config.script;
-var externalInterfaces = require('../lib//util').externalInterfaces;
+var externalInterfaces = require('../lib/util').externalInterfaces;
 var errorize = require('errorize');
 var os = require('os');
 var util = require('util');
 
 process.title = util.format('node minion mesh %s %s', script, name);
 
-delete require.cache[(opts.config.home || '..') + '/configs/mesh_' + config];
-delete require.cache[(opts.config.home || '..') + '/scripts/mesh_' + script];
-var Config = require((opts.config.home || '..') + '/configs/mesh_' + config);
-var Script = require((opts.config.home || '..') + '/scripts/mesh_' + script);
+delete require.cache[(opts.config.home || '..') + '/configs/' + config + '_mesh'];
+delete require.cache[(opts.config.home || '..') + '/scripts/' + script + '_mesh'];
+var Config = require((opts.config.home || '..') + '/configs/' + config + '_mesh');
+var Script = require((opts.config.home || '..') + '/scripts/' + script + '_mesh');
 
 var Happner = require('happner');
 
