@@ -32,6 +32,7 @@ var error = function(e) {
 }
 
 // Reports back to marshal.
+var Reports = {};
 var report = new Happner.MeshClient({
   host: marshal.datalayer.address.address,
   port: marshal.datalayer.address.port,
@@ -43,6 +44,20 @@ report.login()
 
 .then(function() {
   return client.login();
+})
+
+.then(function() {
+  Reports.metric = {
+    increment: function(key, value) {
+      name;
+    },
+    guage: function(key, value) {
+      name;
+    },
+    detail: function(key, vale) {
+      name;
+    }
+  }
 })
 
 .then(function() {
@@ -63,7 +78,8 @@ report.login()
         error: function(e) {
           e.errorAt = Date.now();
           return report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
-        }
+        },
+        mertic: Reports.metric
       }
       try {
         return Script.start(opts, Report, client);
@@ -76,13 +92,14 @@ report.login()
       function(finishOpts, meta) {
         var Report = {
           done: function(result) {
-            result.resetDoneAt = Date.now();
+            result.finishDoneAt = Date.now();
             return report.exchange['happner-minions'].minionFinishDone(name, result);
           },
           error: function(e) {
             e.errorAt = Date.now();
             return report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
-          }
+          },
+          mertic: Reports.metric
         }
         try {
           return Script.finish(finishOpts, Report, client);
@@ -102,7 +119,8 @@ report.login()
           error: function(e) {
             e.errorAt = Date.now();
             return report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
-          }
+          },
+          mertic: Reports.metric
         }
         try {
           return Script.reset(resetOpts, Report, client);
@@ -112,6 +130,10 @@ report.login()
       }
     );
   });
+})
+
+.then(function() {
+  return Script.init(opts, Reports, client);
 })
 
 .then(function() {

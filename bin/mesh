@@ -36,6 +36,7 @@ var error = function(e) {
 }
 
 // Reports back to marshal.
+var Reports = {};
 var report = new Happner.MeshClient({
   host: marshal.datalayer.address.address,
   port: marshal.datalayer.address.port,
@@ -51,6 +52,23 @@ report.login()
 
 .then(function(result) {
   mesh = result;
+})
+
+.then(function() {
+  Reports.metric = {
+    increment: function(key, value) {
+      name;
+    },
+    guage: function(key, value) {
+      name;
+    },
+    detail: function(key, vale) {
+      name;
+    }
+  }
+})
+
+.then(function() {
   return report.event['happner-minions'].onAsync('minion/start/' + name,
     function(data, meta) {
       var Report = {
@@ -68,7 +86,8 @@ report.login()
         error: function(e) {
           e.errorAt = Date.now();
           return report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
-        }
+        },
+        mertic: Reports.metric
       }
       try {
         return Script.start(opts, Report, mesh);
@@ -81,13 +100,14 @@ report.login()
       function(finishOpts, meta) {
         var Report = {
           done: function(result) {
-            result.resetDoneAt = Date.now();
+            result.finishDoneAt = Date.now();
             return report.exchange['happner-minions'].minionFinishDone(name, result);
           },
           error: function(e) {
             e.errorAt = Date.now();
             return report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
-          }
+          },
+          mertic: Reports.metric
         }
         try {
           return Script.finish(finishOpts, Report, mesh);
@@ -107,7 +127,8 @@ report.login()
           error: function(e) {
             e.errorAt = Date.now();
             return report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
-          }
+          },
+          mertic: Reports.metric
         }
         try {
           return Script.reset(resetOpts, Report, mesh);
@@ -117,6 +138,10 @@ report.login()
       }
     );
   });
+})
+
+.then(function() {
+  return Script.init(opts, Reports, mesh);
 })
 
 .then(function() {
