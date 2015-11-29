@@ -77,6 +77,13 @@ report.login()
         mertic: Reports.metric
       }
       try {
+
+        if (Script.steps == 0) {
+          return Report.started().then(function() {
+            Report.done()
+          })
+        }
+
         return Script.start(opts, Report, null);
       } catch (e) {
         report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
