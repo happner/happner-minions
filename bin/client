@@ -47,16 +47,46 @@ report.login()
 })
 
 .then(function() {
+
+  if (!Script.metrics) return;
+
+  var counters = {};
+  var gauges = {};
+  
+  if (Script.metrics.counters) {
+    Object.keys(Script.metrics.counters).forEach(function(key) {
+      counters[key] = 0;
+    });
+  }
+  if (Script.metrics.gauges) {
+    Object.keys(Script.metrics.gauges).forEach(function(key) {
+      gauges[key] = 0; // questionable: setting to zero?
+    });
+  }
+
+  setInterval(function ReportAndResetMetrics() {
+    report.exchange['happner-minions'].minionMetrics(name, {
+      timestamp: Date.now(),
+      counters: counters,
+      gauges: gauges,
+    }).catch(function(e) {
+      console.error('failed sending metrics', e);
+    })
+    for (var key in counters) counters[key] = 0;
+  }, 1000);
+
   Reports.metric = {
     increment: function(key, value) {
-      name;
+      if (!Script.metrics.counters[key]) return console.error('no such counter:', key);
+      counters[key] += (typeof value == 'number' ? value : 1);
     },
-    guage: function(key, value) {
-      name;
+    gauge: function(key, value) {
+      if (!Script.metrics.gauges[key]) return console.error('no such gauge:', key);
+      gauges[key] = value;
     },
-    detail: function(key, vale) {
-      name;
-    }
+    // detail: function(key, vale) {
+    //   name;
+    // }
   }
 })
 
@@ -81,7 +111,7 @@ report.login()
           e.errorAt = Date.now();
           return report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
         },
-        mertic: Reports.metric
+        metric: Reports.metric
       }
       try {
 
@@ -109,7 +139,7 @@ report.login()
             e.errorAt = Date.now();
             return report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
           },
-          mertic: Reports.metric
+          metric: Reports.metric
         }
         try {
           return Script.finish(finishOpts, Report, client);
@@ -131,7 +161,7 @@ report.login()
             e.errorAt = Date.now();
             return report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
           },
-          mertic: Reports.metric
+          metric: Reports.metric
         }
         try {
           return Script.reset(resetOpts, Report, client);
