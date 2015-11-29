@@ -66,16 +66,36 @@ report.login()
         }
       }
       try {
-        return Script.run(opts, Report, client);
+        return Script.start(opts, Report, client);
       } catch (e) {
         report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
       }
     }
   ).then(function() {
+    return report.event['happner-minions'].onAsync('minion/finish/' + name,
+      function(finishOpts, meta) {
+        var Report = {
+          done: function(result) {
+            result.resetDoneAt = Date.now();
+            return report.exchange['happner-minions'].minionFinishDone(name, result);
+          },
+          error: function(e) {
+            e.errorAt = Date.now();
+            return report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
+          }
+        }
+        try {
+          return Script.finish(finishOpts, Report, client);
+        } catch (e) {
+          report.exchange['happner-minions'].minionError(name, errorize.encode(e, 3));
+        }
+      }
+    );
+  }).then(function() {
     return report.event['happner-minions'].onAsync('minion/reset/' + name,
       function(resetOpts, meta) {
         var Report = {
-          resetDone: function(result) {
+          done: function(result) {
             result.resetDoneAt = Date.now();
             return report.exchange['happner-minions'].minionResetDone(name, result);
           },
