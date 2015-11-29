@@ -94,11 +94,12 @@ var start = function() {
       var stepsTotal = stepsDone + stepsPending;
 
       console.log(
-        'viewScript result minions %d/%d, steps %d/%d\n',
+        'viewScript result minions %d/%d, steps %d/%d, errors: %d\n',
         minionsDone,
         minionsTotal,
         stepsDone,
         stepsTotal,
+        result.errors,
         result
 
       );
