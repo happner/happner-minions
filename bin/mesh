@@ -72,14 +72,16 @@ report.login()
   return report.event['happner-minions'].onAsync('minion/start/' + name,
     function(data, meta) {
       var Report = {
-        start: function() {
+        started: function() {
           return report.exchange['happner-minions'].minionStarted(name, {startedAt: Date.now()});
         },
         stepDone: function(step, result) {
+          result = result || {};
           result.doneAt = Date.now();
           return report.exchange['happner-minions'].minionStepDone(name, step, result);
         },
         done: function(result) {
+          result = result || {};
           result.doneAt = Date.now();
           return report.exchange['happner-minions'].minionDone(name, result);
         },
@@ -100,6 +102,7 @@ report.login()
       function(finishOpts, meta) {
         var Report = {
           done: function(result) {
+            result = result || {};
             result.finishDoneAt = Date.now();
             return report.exchange['happner-minions'].minionFinishDone(name, result);
           },
@@ -121,6 +124,7 @@ report.login()
       function(resetOpts, meta) {
         var Report = {
           done: function(result) {
+            result = result || {};
             result.resetDoneAt = Date.now();
             return report.exchange['happner-minions'].minionResetDone(name, result);
           },
