@@ -51,7 +51,11 @@ report.login()
   if (!Script.metrics) return;
 
   var counters = {};
-  var gauges = {};
+  var gauges = {
+    'proc.mem.rss': undefined,
+    'proc.mem.heap.total': undefined,
+    'proc.mem.heap.used': undefined,
+  };
   
   if (Script.metrics.counters) {
     Object.keys(Script.metrics.counters).forEach(function(key) {
@@ -65,6 +69,11 @@ report.login()
   }
 
   setInterval(function ReportAndResetMetrics() {
+    var usage = process.memoryUsage();
+    gauges['proc.mem.rss'] = usage.rss;
+    gauges['proc.mem.heap.total'] = usage.heapTotal;
+    gauges['proc.mem.heap.used'] = usage.heapUsed;
+
     report.exchange['happner-minions'].minionMetrics(name, {
       timestamp: Date.now(),
       counters: counters,
