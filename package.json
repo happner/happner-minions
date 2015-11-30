@@ -1,6 +1,6 @@
 {
   "name": "happner-minions",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Control scripted minion nodes.",
   "main": "index.js",
   "scripts": {
