@@ -44,9 +44,7 @@ var report = new Happner.MeshClient({
 
 var mesh;
 
-report.login()
-
-.then(function() {
+report.login().then(function() {
   return Happner.create(Config.createConfig(opts))
 })
 

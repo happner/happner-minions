@@ -37,9 +37,7 @@ var report = new Happner.MeshClient({
   port: marshal.datalayer.address.port,
 });
 
-report.login()
-
-.then(function() {
+report.login().then(function() {
 
   if (!Script.metrics) return;
 
@@ -62,7 +60,6 @@ report.login()
   }
 
   setInterval(function ReportAndResetMetrics() {
-
     var usage = process.memoryUsage();
     gauges['proc.mem.rss'] = usage.rss;
     gauges['proc.mem.heap.total'] = usage.heapTotal;

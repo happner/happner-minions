@@ -40,9 +40,7 @@ var report = new Happner.MeshClient({
 
 var client = new Happner.MeshClient(clientConfig);
 
-report.login()
-
-.then(function() {
+report.login().then(function() {
   return client.login();
 })
 
